@@ -1,5 +1,6 @@
 import MatchList from "./components/MatchList";
 
+
 function App() {
   return (
     <div style={{ padding: 20 }}>
@@ -12,7 +13,6 @@ function App() {
 export default App;
 
 import Navbar from "./components/Navbar";
-import MatchList from "./components/MatchList";
 
 function App() {
   return (
