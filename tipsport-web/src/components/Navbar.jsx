@@ -1,13 +1,13 @@
 import React from "react";
 
-function Navbar({ onLoginClick }) {
+function Navbar() {
   return (
     <nav style={styles.nav}>
       <h2 style={styles.logo}>Tipsport</h2>
       <div style={styles.buttons}>
         <button style={styles.button}>Domů</button>
         <button style={styles.button}>Zápasy</button>
-        <button style={styles.button} onClick={onLoginClick}>Přihlásit se</button>
+        <button style={styles.button}>Přihlásit se</button>
       </div>
     </nav>
   );
@@ -41,4 +41,6 @@ const styles = {
 };
 
 export default Navbar;
+
+
 
