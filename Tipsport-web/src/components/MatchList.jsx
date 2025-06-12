@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
-import { getMatches } from '../api/matches';
-import MatchCard from './MatchCard';
+// src/components/MatchList.jsx
+
+import { useEffect, useState } from "react";
+import { getMatches } from "../api/matches";
+import MatchCard from "./MatchCard";
 
 function MatchList() {
   const [matches, setMatches] = useState([]);
