@@ -10,3 +10,19 @@ function App() {
 }
 
 export default App;
+
+import Navbar from "./components/Navbar";
+import MatchList from "./components/MatchList";
+
+function App() {
+  return (
+    <div>
+      <Navbar />
+      <div style={{ padding: 20 }}>
+        <MatchList />
+      </div>
+    </div>
+  );
+}
+
+export default App;
