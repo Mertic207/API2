@@ -1,133 +1,121 @@
 import React, { useState, useEffect } from "react";
 
+const additionalMatches = [
+  {
+    id: 101,
+    event: "Česká republika U21 vs Německo U21",
+    competition: "UEFA Mistrovství Evropy U21",
+    time: "15:00 CEST",
+    location: "MOL Aréna, Dunajská Streda, Slovensko",
+    odds: { "1": 2.4, "X": 3.1, "2": 2.7 },
+  },
+  {
+    id: 102,
+    event: "Nizozemsko U21 vs Dánsko U21",
+    competition: "UEFA Mistrovství Evropy U21",
+    time: "15:00 CEST",
+    location: "Futbal Tatran Arena, Prešov, Slovensko",
+    odds: { "1": 2.6, "X": 3.0, "2": 2.5 },
+  },
+  {
+    id: 103,
+    event: "Anglie U21 vs Slovinsko U21",
+    competition: "UEFA Mistrovství Evropy U21",
+    time: "15:00 CEST",
+    location: "Stadión Pod Zoborom, Nitra, Slovensko",
+    odds: { "1": 2.1, "X": 3.3, "2": 3.0 },
+  },
+  {
+    id: 104,
+    event: "Finsko U21 vs Ukrajina U21",
+    competition: "UEFA Mistrovství Evropy U21",
+    time: "15:00 CEST",
+    location: "Košická futbalová aréna, Košice, Slovensko",
+    odds: { "1": 2.7, "X": 3.2, "2": 2.4 },
+  },
+  {
+    id: 201,
+    event: "PSG vs Atlético Madrid",
+    competition: "FIFA Club World Cup 2025",
+    time: "21:00 CEST",
+    location: "Stadion v USA",
+    odds: { "1": 1.8, "X": 3.6, "2": 4.2 },
+  },
+  {
+    id: 202,
+    event: "Bayern Mnichov vs Auckland City",
+    competition: "FIFA Club World Cup 2025",
+    time: "23:00 CEST",
+    location: "Stadion v USA",
+    odds: { "1": 1.5, "X": 4.0, "2": 5.0 },
+  },
+];
+
 export default function MatchList() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Pevné evropské zápasy
-  const europeanMatches = [
-    {
-      id: "e1",
-      event: "Česká republika U21 vs Německo U21",
-      time: "15:00 CEST",
-      place: "MOL Aréna, Dunajská Streda, Slovensko",
-      competition: "UEFA Mistrovství Evropy U21",
-    },
-    {
-      id: "e2",
-      event: "Nizozemsko U21 vs Dánsko U21",
-      time: "15:00 CEST",
-      place: "Futbal Tatran Arena, Prešov, Slovensko",
-      competition: "UEFA Mistrovství Evropy U21",
-    },
-    {
-      id: "e3",
-      event: "Anglie U21 vs Slovinsko U21",
-      time: "15:00 CEST",
-      place: "Stadión Pod Zoborom, Nitra, Slovensko",
-      competition: "UEFA Mistrovství Evropy U21",
-    },
-    {
-      id: "e4",
-      event: "Finsko U21 vs Ukrajina U21",
-      time: "15:00 CEST",
-      place: "Košická futbalová aréna, Košice, Slovensko",
-      competition: "UEFA Mistrovství Evropy U21",
-    },
-  ];
-
-  // Pevné mezinárodní zápasy
-  const internationalMatches = [
-    {
-      id: "i1",
-      event: "PSG vs Atlético Madrid",
-      time: "21:00 CEST",
-      place: "Stadion v USA",
-      competition: "FIFA Club World Cup 2025",
-    },
-    {
-      id: "i2",
-      event: "Bayern Mnichov vs Auckland City",
-      time: "23:00 CEST",
-      place: "Stadion v USA",
-      competition: "FIFA Club World Cup 2025",
-    },
-  ];
+  // Dynamicky nastavená URL podle prostředí (lokálně nebo na Vercelu)
+  const API_URL =
+    process.env.NODE_ENV === "production"
+      ? "/api/matches"
+      : "http://localhost:3001/api/matches";
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/matches")
+    fetch(API_URL)
       .then((res) => res.json())
       .then((data) => {
-        setMatches(data);
+        const homeMatches = data.map((m) => ({
+          ...m,
+          competition: "Domácí zápasy",
+        }));
+        setMatches([...homeMatches, ...additionalMatches]);
         setLoading(false);
       })
       .catch((err) => {
         console.error("Chyba při načítání:", err);
+        setMatches(additionalMatches);
         setLoading(false);
       });
-  }, []);
+  }, [API_URL]);
 
   if (loading) return <div>Načítám zápasy...</div>;
 
+  // Rozdělení podle soutěží
+  const grouped = matches.reduce((acc, match) => {
+    if (!acc[match.competition]) acc[match.competition] = [];
+    acc[match.competition].push(match);
+    return acc;
+  }, {});
+
   return (
-    <div style={{ padding: 20 }}>
-      {/* Tipsport zápasy z API */}
-      <h2>Tipsport zápasy</h2>
-      {matches.length === 0 && <p>Žádné zápasy k zobrazení</p>}
-      {matches.map((match) => (
-        <div
-          key={match.id}
-          style={{
-            border: "1px solid #ccc",
-            padding: 10,
-            marginBottom: 15,
-            borderRadius: 5,
-          }}
-        >
-          <h3>{match.event}</h3>
-          <p>
-            Kurzy: 1 = {match.odds["1"]}, X = {match.odds["X"]}, 2 = {match.odds["2"]}
-          </p>
-        </div>
-      ))}
-
-      {/* Evropské zápasy */}
-      <h2>Dnešní zápasy v Evropě (15. června 2025)</h2>
-      {europeanMatches.map((match) => (
-        <div
-          key={match.id}
-          style={{
-            border: "1px solid #ccc",
-            padding: 10,
-            marginBottom: 15,
-            borderRadius: 5,
-          }}
-        >
-          <h3>{match.event}</h3>
-          <p>🕒 Čas: {match.time}</p>
-          <p>📍 Místo: {match.place}</p>
-          <p>Soutěž: {match.competition}</p>
-        </div>
-      ))}
-
-      {/* Mezinárodní zápasy */}
-      <h2>Mezinárodní zápasy</h2>
-      {internationalMatches.map((match) => (
-        <div
-          key={match.id}
-          style={{
-            border: "1px solid #ccc",
-            padding: 10,
-            marginBottom: 15,
-            borderRadius: 5,
-          }}
-        >
-          <h3>{match.event}</h3>
-          <p>🕒 Čas: {match.time}</p>
-          <p>📍 Místo: {match.place}</p>
-          <p>Soutěž: {match.competition}</p>
+    <div>
+      {Object.keys(grouped).map((competition) => (
+        <div key={competition} style={{ marginBottom: 30 }}>
+          <h2>{competition}</h2>
+          {grouped[competition].map((match) => (
+            <div
+              key={match.id}
+              style={{
+                border: "1px solid #ccc",
+                padding: 10,
+                marginBottom: 10,
+                borderRadius: 5,
+              }}
+            >
+              <h3>{match.event}</h3>
+              {match.time && <p>🕒 Čas: {match.time}</p>}
+              {match.location && <p>📍 Místo: {match.location}</p>}
+              {match.odds && (
+                <p>
+                  Kurzy: 1 = {match.odds["1"]}, X = {match.odds["X"]}, 2 = {match.odds["2"]}
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       ))}
     </div>
   );
 }
+
