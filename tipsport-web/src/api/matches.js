@@ -1,26 +1,25 @@
-export async function getMatches() {
-  return [
-    {
-      id: 1,
-      homeTeam: "Sparta Praha",
-      awayTeam: "Slavia Praha",
-      time: "18:00",
-      odds: {
-        home: 2.1,
-        draw: 3.5,
-        away: 2.7,
-      },
-    },
-    {
-      id: 2,
-      homeTeam: "Plzeň",
-      awayTeam: "Baník Ostrava",
-      time: "20:00",
-      odds: {
-        home: 1.85,
-        draw: 3.9,
-        away: 4.1,
-      },
-    },
-  ];
-}
+
+
+const matches = [
+  {
+    id: 1,
+    event: "Slavia Praha vs Sparta Praha",
+    odds: {
+      "1": 2.5,
+      "X": 3.2,
+      "2": 2.8
+    }
+  },
+  {
+    id: 2,
+    event: "Baník Ostrava vs Plzeň",
+    odds: {
+      "1": 2.9,
+      "X": 3.1,
+      "2": 2.4
+    }
+  }
+];
+
+export default matches;
+

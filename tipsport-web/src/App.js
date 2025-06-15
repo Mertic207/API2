@@ -12,6 +12,6 @@ function App() {
       </div>
     </div>
   );
-}
+}  // <-- tady končí funkce App
 
 export default App;
